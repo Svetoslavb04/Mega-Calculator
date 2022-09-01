@@ -5,13 +5,14 @@ const backgroundColor = props.backgroundColor;
 const symbol = props.symbol;
 </script>
 <template>
-  <div class="custom-button" :class="backgroundColor">
+  <div class="custom-button" :class="`bg-color-${backgroundColor}`">
     <h1 class="custom-button-symbol">
       {{ symbol }}
     </h1>
   </div>
 </template>
-<style>
+<style scoped>
+
 .custom-button {
   width: 75px;
   height: 75px;
@@ -19,17 +20,18 @@ const symbol = props.symbol;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .custom-button-symbol {
     color: white;
 }
 
-.green {
+.bg-color-green {
   background-color: #1cc883;
 }
 
-.grey {
+.bg-color-grey {
   background-color: #35425f;
 }
 </style>
