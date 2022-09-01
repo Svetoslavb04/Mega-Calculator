@@ -1,5 +1,22 @@
 <script setup>
 import CustomButton from "../components/CustomButton.vue";
+import { ref } from "vue";
+
+const result = ref("");
+
+function onButtonClick(symbol) {
+
+  const specialSymbols = ["C", "*", "/", "%", "=", "-", "+"];
+
+  if (!specialSymbols.includes(symbol)) {
+    result.value += symbol;
+  }
+
+  if (symbol === "C") {
+    result.value = "";
+  } else {
+  }
+}
 </script>
 
 <template>
