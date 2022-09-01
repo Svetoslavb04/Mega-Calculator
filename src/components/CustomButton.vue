@@ -1,18 +1,24 @@
 <script setup>
-const props = defineProps(["backgroundColor", "symbol"]);
+
+const props = defineProps(["backgroundColor", "symbol", "onButtonClick"]);
 
 const backgroundColor = props.backgroundColor;
 const symbol = props.symbol;
+const onButtonClick = props.onButtonClick;
+
 </script>
 <template>
-  <div class="custom-button" :class="`bg-color-${backgroundColor}`">
+  <div
+    class="custom-button"
+    :class="`bg-color-${backgroundColor}`"
+    @click="onButtonClick(symbol)"
+  >
     <h1 class="custom-button-symbol">
       {{ symbol }}
     </h1>
   </div>
 </template>
 <style scoped>
-
 .custom-button {
   width: 75px;
   height: 75px;
@@ -24,14 +30,14 @@ const symbol = props.symbol;
 }
 
 .custom-button-symbol {
-    color: white;
+  color: white;
 }
 
 .bg-color-green {
-  background-color: #1cc883;
+  background-color: var(--primary);
 }
 
-.bg-color-grey {
-  background-color: #35425f;
+.bg-color-secondary {
+  background-color: var(--secondary);
 }
 </style>

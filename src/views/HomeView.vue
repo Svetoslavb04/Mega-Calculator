@@ -6,35 +6,35 @@ import CustomButton from "../components/CustomButton.vue";
   <main>
     <div id="calculator">
       <div class="input-box-wrapper">
-        <input type="text" name="input-box" id="input-box" />
+        <input type="text" name="input-box" id="input-box" :value="result" />
       </div>
       <div class="buttons-row">
-        <CustomButton backgroundColor="green" symbol="C" />
-        <CustomButton backgroundColor="green" symbol="*" />
-        <CustomButton backgroundColor="green" symbol="/" />
-        <CustomButton backgroundColor="green" symbol="-" />
+        <CustomButton backgroundColor="green" symbol="C" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="green" symbol="*" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="green" symbol="/" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="green" symbol="-" :onButtonClick="onButtonClick" />
       </div>
       <div class="buttons-row">
-        <CustomButton backgroundColor="grey" symbol="7" />
-        <CustomButton backgroundColor="grey" symbol="8" />
-        <CustomButton backgroundColor="grey" symbol="9" />
-        <CustomButton backgroundColor="green" symbol="+" />
+        <CustomButton backgroundColor="secondary" symbol="7" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="secondary" symbol="8" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="secondary" symbol="9" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="green" symbol="+" :onButtonClick="onButtonClick" />
       </div>
       <div class="buttons-row">
-        <CustomButton backgroundColor="grey" symbol="4" />
-        <CustomButton backgroundColor="grey" symbol="5" />
-        <CustomButton backgroundColor="grey" symbol="6" />
-        <CustomButton backgroundColor="green" symbol="%" />
+        <CustomButton backgroundColor="secondary" symbol="4" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="secondary" symbol="5" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="secondary" symbol="6" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="green" symbol="%" :onButtonClick="onButtonClick" />
       </div>
       <div class="buttons-row">
-        <CustomButton backgroundColor="grey" symbol="1" />
-        <CustomButton backgroundColor="grey" symbol="2" />
-        <CustomButton backgroundColor="grey" symbol="3" />
-        <CustomButton backgroundColor="green" symbol="=" />
+        <CustomButton backgroundColor="secondary" symbol="1" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="secondary" symbol="2" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="secondary" symbol="3" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="green" symbol="=" :onButtonClick="onButtonClick" />
       </div>
       <div class="buttons-row">
-        <CustomButton backgroundColor="grey" symbol="0" />
-        <CustomButton backgroundColor="grey" symbol="." />
+        <CustomButton backgroundColor="secondary" symbol="0" :onButtonClick="onButtonClick" />
+        <CustomButton backgroundColor="secondary" symbol="." :onButtonClick="onButtonClick" />
       </div>
     </div>
   </main>
@@ -77,8 +77,8 @@ main {
   width: 100%;
   padding: 12px;
   height: 80px;
-  background-color: #35425f !important;
-  border: 1px solid #1cc883;
+  background-color: var(--secondary) !important;
+  border: 1px solid var(--primary);
   border-radius: 4px;
   font-size: 1.5rem;
   color: white;
@@ -86,6 +86,6 @@ main {
 
 #input-box:focus-visible {
   outline: none;
-  border: 2px solid #1cc883 !important;
+  border: 2px solid var(--primary) !important;
 }
 </style>
