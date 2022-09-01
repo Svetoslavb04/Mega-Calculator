@@ -1,1 +1,1 @@
-# Mega-Calculator
+# Mega Calculator
