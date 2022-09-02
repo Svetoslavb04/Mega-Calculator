@@ -1,12 +1,8 @@
 <script setup>
-import Calculator from "../components/Calculator.vue";
+import Calculator from "../components/Calculator/Calculator.vue";
+import { calculatorModes } from "../components/Calculator/config.js";
 import Switch from "../components/Switch.vue";
 import { ref } from "vue";
-
-const calculatorModes = {
-  expression: "expression",
-  default: "default",
-};
 
 const calculatorMode = ref(calculatorModes.default);
 
@@ -30,7 +26,7 @@ const onCalculatorModeChange = () =>
           }}
         </h3>
       </div>
-      <Calculator />
+      <Calculator :mode="calculatorMode" />
     </div>
   </main>
 </template>

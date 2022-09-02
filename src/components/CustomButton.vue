@@ -13,8 +13,7 @@ const onButtonClick = props.onButtonClick;
     :class="`bg-color-${backgroundColor}`"
     @click="onButtonClick(symbol)"
   >
-    <h1 class="custom-button-symbol">
-      {{ symbol }}
+    <h1 v-html="symbol" class="custom-button-symbol">
     </h1>
   </div>
 </template>
@@ -33,7 +32,7 @@ const onButtonClick = props.onButtonClick;
   color: white;
 }
 
-.bg-color-green {
+.bg-color-primary {
   background-color: var(--primary);
 }
 
