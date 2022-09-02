@@ -3,6 +3,8 @@ import CustomButton from "../components/CustomButton.vue";
 import { ref } from "vue";
 import { create, all } from "mathjs";
 
+const props = defineProps(["mode"]);
+
 const config = {
   number: "BigNumber",
 };
@@ -18,7 +20,7 @@ function onButtonClick(symbol) {
   const operation = operationSymbols.filter((symbol) => result.value.includes(symbol))[0];
 
   if (
-    (result.value === "" || result.value === "0") &&
+    (result.value === "" || result.value === "0" || result.value === "Error") &&
     operationSymbols.some((opSymbol) => opSymbol === symbol)
   ) {
     return;
