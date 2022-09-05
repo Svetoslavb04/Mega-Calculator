@@ -60,6 +60,7 @@ function handleOperation(operation) {
   <div
     id="calculator"
     :class="props.mode === calculatorModes.expression ? 'expression-mode' : ''"
+    style="user-select:none"
   >
     <div class="input-box-wrapper">
       <input type="text" name="input-box" id="input-box" :value="result" disabled />
@@ -249,6 +250,7 @@ function handleOperation(operation) {
   width: var(--calculator-width);
   height: 550px;
   background-color: #252f45;
+  user-select:none;
 }
 
 .calculator-buttons-wrapper {
