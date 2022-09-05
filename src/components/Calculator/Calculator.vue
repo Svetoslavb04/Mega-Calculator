@@ -182,6 +182,10 @@ const result = ref({
   </div>
 </template>
 <style>
+::selection {
+  color: #3b3939;
+  background: #d1cdcd;
+}
 :root {
   --calculator-width: 400px;
 }
