@@ -29,6 +29,10 @@ function onButtonClick(symbol) {
 
   if (symbol === "C") {
     result.value = "0";
+  } else if(symbol ==="CE"){
+    if (result.value.length>1) {
+      result.value = result.value.slice(0,-1);
+    }else result.value = "0";
   } else if (result.value === "0" || result.value === "Error") {
     result.value = symbol;
   } else if (operationSymbols.some((opSymbol) => opSymbol === symbol) && operation) {
@@ -77,9 +81,9 @@ function handleOperation(operation) {
       <CustomButton
         v-for="data in [
           { symbol: 'C', bgColor: 'primary' },
+          { symbol: 'CE', bgColor: 'primary' },
           { symbol: '*', bgColor: 'primary' },
           { symbol: '/', bgColor: 'primary' },
-          { symbol: '-', bgColor: 'primary' },
         ]"
         :backgroundColor="data.bgColor"
         :symbol="data.symbol"
@@ -92,7 +96,7 @@ function handleOperation(operation) {
           { symbol: '7', bgColor: 'secondary' },
           { symbol: '8', bgColor: 'secondary' },
           { symbol: '9', bgColor: 'secondary' },
-          { symbol: '+', bgColor: 'primary' },
+          { symbol: '-', bgColor: 'primary' },
         ]"
         :backgroundColor="data.bgColor"
         :symbol="data.symbol"
@@ -105,7 +109,7 @@ function handleOperation(operation) {
           { symbol: '4', bgColor: 'secondary' },
           { symbol: '5', bgColor: 'secondary' },
           { symbol: '6', bgColor: 'secondary' },
-          { symbol: '%', bgColor: 'primary' },
+          { symbol: '+', bgColor: 'primary' },
         ]"
         :backgroundColor="data.bgColor"
         :symbol="data.symbol"
@@ -118,7 +122,7 @@ function handleOperation(operation) {
           { symbol: '1', bgColor: 'secondary' },
           { symbol: '2', bgColor: 'secondary' },
           { symbol: '3', bgColor: 'secondary' },
-          { symbol: '=', bgColor: 'primary' },
+          { symbol: '%', bgColor: 'primary' },
         ]"
         :backgroundColor="data.bgColor"
         :symbol="data.symbol"
@@ -130,6 +134,8 @@ function handleOperation(operation) {
         v-for="data in [
           { symbol: '0', bgColor: 'secondary' },
           { symbol: '.', bgColor: 'secondary' },
+          { symbol: '&#128247;', bgColor: 'secondary' },
+          { symbol: '=', bgColor: 'primary' },
         ]"
         :backgroundColor="data.bgColor"
         :symbol="data.symbol"
