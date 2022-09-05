@@ -302,6 +302,7 @@ function handleOperation(operation) {
   width: var(--calculator-width);
   height: 550px;
   background-color: #252f45;
+  user-select:none;
 }
 
 .calculator-buttons-wrapper {
