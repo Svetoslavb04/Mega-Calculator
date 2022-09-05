@@ -9,14 +9,14 @@ import {
 } from "./config.js";
 
 import CustomButton from "../../components/CustomButton.vue";
-import CalcualtorDefault from "../../components/CalcualtorDefault/index.vue";
+import CalculatorDefault from "../CalculatorDefault/index.vue";
+import CalculatorExpression from "../CalculatorExpression/index.vue";
 
 const props = defineProps(["mode"]);
 
 const result = ref({
-  value: "0"
+  value: "0",
 });
-
 </script>
 <template>
   <div
@@ -26,159 +26,11 @@ const result = ref({
     <div class="input-box-wrapper">
       <input type="text" name="input-box" id="input-box" :value="result.value" disabled />
     </div>
-    <CalcualtorDefault :result="result" v-if="props.mode === calculatorModes.default" />
-    <div
-      id="calculator-expression"
+    <CalculatorDefault :result="result" v-if="props.mode === calculatorModes.default" />
+    <CalculatorExpression
+      :result="result"
       v-if="props.mode === calculatorModes.expression"
-      class="calculator-buttons-wrapper"
-    >
-      <div class="buttons-row">
-        <CustomButton
-          backgroundColor="primary"
-          symbol="C"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="*"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="/"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="-"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="("
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol=")"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-      <div class="buttons-row">
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="7"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="8"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="9"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="+"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="x<sup>y</sup>"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="√"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-      <div class="buttons-row">
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="4"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="5"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="6"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="%"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="sin"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="cos"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-      <div class="buttons-row">
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="1"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="2"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="3"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="="
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="tg"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="primary"
-          symbol="cotg"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-      <div class="buttons-row">
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="0"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="."
-          :onButtonClick="onButtonClick"
-        />
-
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="&#128247;"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-    </div>
+    />
   </div>
 </template>
 <style>
