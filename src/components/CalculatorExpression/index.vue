@@ -22,6 +22,12 @@ const onButtonClick = (symbol) => {
     return (result.value = "0");
   }
 
+ if(symbol === "CE" ){
+    if (result.value.length>1) {
+      return result.value = result.value.slice(0,-1);
+    }else return result.value = "0";
+  }
+
   if (symbol === "=") {
     replacePercentageExpression();
     replaceTgAndCotg();
@@ -104,9 +110,9 @@ function replaceTgAndCotg() {
       <CustomButton
         v-for="data in [
           { symbol: 'C', bgColor: 'primary' },
+          { symbol: 'CE', bgColor: 'primary' },
           { symbol: '*', bgColor: 'primary' },
           { symbol: '/', bgColor: 'primary' },
-          { symbol: '-', bgColor: 'primary' },
           { symbol: '(', bgColor: 'primary' },
           { symbol: ')', bgColor: 'primary' },
         ]"
@@ -121,7 +127,7 @@ function replaceTgAndCotg() {
           { symbol: '7', bgColor: 'secondary' },
           { symbol: '8', bgColor: 'secondary' },
           { symbol: '9', bgColor: 'secondary' },
-          { symbol: '+', bgColor: 'primary' },
+          { symbol: '-', bgColor: 'primary' },
           { symbol: 'x<sup>y</sup>', bgColor: 'primary' },
           { symbol: '√', bgColor: 'primary' },
         ]"
@@ -136,7 +142,7 @@ function replaceTgAndCotg() {
           { symbol: '4', bgColor: 'secondary' },
           { symbol: '5', bgColor: 'secondary' },
           { symbol: '6', bgColor: 'secondary' },
-          { symbol: '%', bgColor: 'primary' },
+          { symbol: '+', bgColor: 'primary' },
           { symbol: 'sin', bgColor: 'primary' },
           { symbol: 'cos', bgColor: 'primary' },
         ]"
@@ -151,7 +157,7 @@ function replaceTgAndCotg() {
           { symbol: '1', bgColor: 'secondary' },
           { symbol: '2', bgColor: 'secondary' },
           { symbol: '3', bgColor: 'secondary' },
-          { symbol: '=', bgColor: 'primary' },
+          { symbol: '%', bgColor: 'primary' },
           { symbol: 'tg', bgColor: 'primary' },
           { symbol: 'cotg', bgColor: 'primary' },
         ]"
@@ -166,6 +172,7 @@ function replaceTgAndCotg() {
           { symbol: '0', bgColor: 'secondary' },
           { symbol: '.', bgColor: 'secondary' },
           { symbol: '&#128247;', bgColor: 'secondary' },
+          { symbol: '=', bgColor: 'primary' },
         ]"
         :backgroundColor="data.bgColor"
         :symbol="data.symbol"
