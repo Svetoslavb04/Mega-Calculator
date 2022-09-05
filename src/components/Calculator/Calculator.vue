@@ -37,6 +37,8 @@ function onButtonClick(symbol) {
     operationSymbols.includes(symbol)
   ) {
     handleOperation(symbol);
+  } else if (symbol === "=") {
+    return;
   } else {
     result.value += symbol;
   }
@@ -59,81 +61,72 @@ function handleOperation(operation) {
 <template>
   <div
     id="calculator"
-    :class="props.mode === calculatorModes.expression ? 'expression-mode' : ''"
+    :class="{ 'expression-mode': props.mode === calculatorModes.expression }"
   >
     <div class="input-box-wrapper">
       <input type="text" name="input-box" id="input-box" :value="result" disabled />
     </div>
     <div v-if="props.mode === calculatorModes.default" class="calculator-buttons-wrapper">
       <div class="buttons-row">
-        <CustomButton backgroundColor="primary" symbol="C" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="*" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="/" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="-" :onButtonClick="onButtonClick" />
+        <CustomButton
+          v-for="data in [
+            { symbol: 'C', bgColor: 'primary' },
+            { symbol: '*', bgColor: 'primary' },
+            { symbol: '/', bgColor: 'primary' },
+            { symbol: '-', bgColor: 'primary' },
+          ]"
+          :backgroundColor="data.bgColor"
+          :symbol="data.symbol"
+          :onButtonClick="onButtonClick"
+        />
       </div>
       <div class="buttons-row">
         <CustomButton
-          backgroundColor="secondary"
-          symbol="7"
+          v-for="data in [
+            { symbol: '7', bgColor: 'secondary' },
+            { symbol: '8', bgColor: 'secondary' },
+            { symbol: '9', bgColor: 'secondary' },
+            { symbol: '+', bgColor: 'primary' },
+          ]"
+          :backgroundColor="data.bgColor"
+          :symbol="data.symbol"
           :onButtonClick="onButtonClick"
         />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="8"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="9"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton backgroundColor="primary" symbol="+" :onButtonClick="onButtonClick" />
       </div>
       <div class="buttons-row">
         <CustomButton
-          backgroundColor="secondary"
-          symbol="4"
+          v-for="data in [
+            { symbol: '4', bgColor: 'secondary' },
+            { symbol: '5', bgColor: 'secondary' },
+            { symbol: '6', bgColor: 'secondary' },
+            { symbol: '%', bgColor: 'primary' },
+          ]"
+          :backgroundColor="data.bgColor"
+          :symbol="data.symbol"
           :onButtonClick="onButtonClick"
         />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="5"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="6"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton backgroundColor="primary" symbol="%" :onButtonClick="onButtonClick" />
       </div>
       <div class="buttons-row">
         <CustomButton
-          backgroundColor="secondary"
-          symbol="1"
+          v-for="data in [
+            { symbol: '1', bgColor: 'secondary' },
+            { symbol: '2', bgColor: 'secondary' },
+            { symbol: '3', bgColor: 'secondary' },
+            { symbol: '=', bgColor: 'primary' },
+          ]"
+          :backgroundColor="data.bgColor"
+          :symbol="data.symbol"
           :onButtonClick="onButtonClick"
         />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="2"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="3"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton backgroundColor="primary" symbol="=" :onButtonClick="onButtonClick" />
       </div>
       <div class="buttons-row">
         <CustomButton
-          backgroundColor="secondary"
-          symbol="0"
-          :onButtonClick="onButtonClick"
-        />
-        <CustomButton
-          backgroundColor="secondary"
-          symbol="."
+          v-for="data in [
+            { symbol: '0', bgColor: 'secondary' },
+            { symbol: '.', bgColor: 'secondary' },
+          ]"
+          :backgroundColor="data.bgColor"
+          :symbol="data.symbol"
           :onButtonClick="onButtonClick"
         />
       </div>
@@ -143,12 +136,36 @@ function handleOperation(operation) {
       class="calculator-buttons-wrapper"
     >
       <div class="buttons-row">
-        <CustomButton backgroundColor="primary" symbol="C" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="*" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="/" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="-" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="(" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol=")" :onButtonClick="onButtonClick" />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="C"
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="*"
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="/"
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="-"
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="("
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol=")"
+          :onButtonClick="onButtonClick"
+        />
       </div>
       <div class="buttons-row">
         <CustomButton
@@ -166,9 +183,21 @@ function handleOperation(operation) {
           symbol="9"
           :onButtonClick="onButtonClick"
         />
-        <CustomButton backgroundColor="primary" symbol="+" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="x<sup>y</sup>" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="√" :onButtonClick="onButtonClick" />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="+"
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="x<sup>y</sup>"
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="√"
+          :onButtonClick="onButtonClick"
+        />
       </div>
       <div class="buttons-row">
         <CustomButton
@@ -186,9 +215,21 @@ function handleOperation(operation) {
           symbol="6"
           :onButtonClick="onButtonClick"
         />
-        <CustomButton backgroundColor="primary" symbol="%" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="sin" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="cos" :onButtonClick="onButtonClick" />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="%"
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="sin"
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="cos"
+          :onButtonClick="onButtonClick"
+        />
       </div>
       <div class="buttons-row">
         <CustomButton
@@ -206,9 +247,21 @@ function handleOperation(operation) {
           symbol="3"
           :onButtonClick="onButtonClick"
         />
-        <CustomButton backgroundColor="primary" symbol="=" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="tg" :onButtonClick="onButtonClick" />
-        <CustomButton backgroundColor="primary" symbol="cotg" :onButtonClick="onButtonClick" />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="="
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="tg"
+          :onButtonClick="onButtonClick"
+        />
+        <CustomButton
+          backgroundColor="primary"
+          symbol="cotg"
+          :onButtonClick="onButtonClick"
+        />
       </div>
       <div class="buttons-row">
         <CustomButton
@@ -221,7 +274,7 @@ function handleOperation(operation) {
           symbol="."
           :onButtonClick="onButtonClick"
         />
-        
+
         <CustomButton
           backgroundColor="secondary"
           symbol="&#128247;"
