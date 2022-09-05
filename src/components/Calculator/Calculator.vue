@@ -1,62 +1,22 @@
 <script setup>
-import CustomButton from "../../components/CustomButton.vue";
 import { ref } from "vue";
-import { create, all } from "mathjs";
-import { calculatorModes } from "./config.js";
+
+import {
+  calculatorModes,
+  specialSymbols,
+  calculateableSymbols,
+  operationSymbols,
+} from "./config.js";
+
+import CustomButton from "../../components/CustomButton.vue";
+import CalcualtorDefault from "../../components/CalcualtorDefault/index.vue";
 
 const props = defineProps(["mode"]);
 
-const math = create(all, {
-  number: "BigNumber",
+const result = ref({
+  value: "0"
 });
 
-const specialSymbols = ["C", "="];
-const calculateableSymbols = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
-const operationSymbols = ["*", "/", "%", "-", "+", "="];
-
-const result = ref("0");
-
-function onButtonClick(symbol) {
-  const operation = operationSymbols.filter((symbol) => result.value.includes(symbol))[0];
-
-  if (
-    (result.value === "" || result.value === "0" || result.value === "Error") &&
-    operationSymbols.some((opSymbol) => opSymbol === symbol)
-  ) {
-    return;
-  }
-
-  if (symbol === "C") {
-    result.value = "0";
-  } else if (result.value === "0" || result.value === "Error") {
-    result.value = symbol;
-  } else if (operationSymbols.some((opSymbol) => opSymbol === symbol) && operation) {
-    handleOperation(operation);
-  } else if (
-    operationSymbols.some((symbol) => result.value.includes(symbol)) &&
-    operationSymbols.includes(symbol)
-  ) {
-    handleOperation(symbol);
-  } else if (symbol === "=") {
-    return;
-  } else {
-    result.value += symbol;
-  }
-}
-
-function handleOperation(operation) {
-  const numbers = result.value.split(operation).filter(Boolean);
-
-  if (numbers.length < 2) {
-    return (result.value = "Error");
-  }
-
-  if (operation !== "%") {
-    result.value = `${(math.evaluate(`${numbers[0]} ${operation} ${numbers[1]}`)).toFixed(11)}`;
-  } else {
-    result.value = `${(math.evaluate(`${numbers[0]}${operation} * ${numbers[1]}`)).toFixed(11)}`;
-  }
-}
 </script>
 <template>
   <div
@@ -64,74 +24,11 @@ function handleOperation(operation) {
     :class="{ 'expression-mode': props.mode === calculatorModes.expression }"
   >
     <div class="input-box-wrapper">
-      <input type="text" name="input-box" id="input-box" :value="result" disabled />
+      <input type="text" name="input-box" id="input-box" :value="result.value" disabled />
     </div>
-    <div v-if="props.mode === calculatorModes.default" class="calculator-buttons-wrapper">
-      <div class="buttons-row">
-        <CustomButton
-          v-for="data in [
-            { symbol: 'C', bgColor: 'primary' },
-            { symbol: '*', bgColor: 'primary' },
-            { symbol: '/', bgColor: 'primary' },
-            { symbol: '-', bgColor: 'primary' },
-          ]"
-          :backgroundColor="data.bgColor"
-          :symbol="data.symbol"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-      <div class="buttons-row">
-        <CustomButton
-          v-for="data in [
-            { symbol: '7', bgColor: 'secondary' },
-            { symbol: '8', bgColor: 'secondary' },
-            { symbol: '9', bgColor: 'secondary' },
-            { symbol: '+', bgColor: 'primary' },
-          ]"
-          :backgroundColor="data.bgColor"
-          :symbol="data.symbol"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-      <div class="buttons-row">
-        <CustomButton
-          v-for="data in [
-            { symbol: '4', bgColor: 'secondary' },
-            { symbol: '5', bgColor: 'secondary' },
-            { symbol: '6', bgColor: 'secondary' },
-            { symbol: '%', bgColor: 'primary' },
-          ]"
-          :backgroundColor="data.bgColor"
-          :symbol="data.symbol"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-      <div class="buttons-row">
-        <CustomButton
-          v-for="data in [
-            { symbol: '1', bgColor: 'secondary' },
-            { symbol: '2', bgColor: 'secondary' },
-            { symbol: '3', bgColor: 'secondary' },
-            { symbol: '=', bgColor: 'primary' },
-          ]"
-          :backgroundColor="data.bgColor"
-          :symbol="data.symbol"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-      <div class="buttons-row">
-        <CustomButton
-          v-for="data in [
-            { symbol: '0', bgColor: 'secondary' },
-            { symbol: '.', bgColor: 'secondary' },
-          ]"
-          :backgroundColor="data.bgColor"
-          :symbol="data.symbol"
-          :onButtonClick="onButtonClick"
-        />
-      </div>
-    </div>
+    <CalcualtorDefault :result="result" v-if="props.mode === calculatorModes.default" />
     <div
+      id="calculator-expression"
       v-if="props.mode === calculatorModes.expression"
       class="calculator-buttons-wrapper"
     >
@@ -302,7 +199,7 @@ function handleOperation(operation) {
   width: var(--calculator-width);
   height: 550px;
   background-color: #252f45;
-  user-select:none;
+  user-select: none;
 }
 
 .calculator-buttons-wrapper {
