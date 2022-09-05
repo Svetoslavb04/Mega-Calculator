@@ -24,6 +24,7 @@ const onButtonClick = (symbol) => {
 
   if (symbol === "=") {
     replacePercentageExpression();
+    replaceTgAndCotg();
 
     return (result.value = `${math.evaluate(result.value)}`);
   }
@@ -32,10 +33,10 @@ const onButtonClick = (symbol) => {
     return (result.value = symbol);
   }
 
-  if (
-    calculateableSymbols.includes(result.value[result.value.length - 1]) &&
-    calculateableSymbols.includes(symbol)
-  ) {
+  const expressionParts = result.value.split(" ");
+  const lastExpressionPart = expressionParts[expressionParts.length - 1];
+
+  if (operationSymbols.some((symbol) => !lastExpressionPart.includes(symbol))) {
     result.value += symbol;
   } else {
     result.value += " " + symbol;
@@ -56,6 +57,44 @@ function replacePercentageExpression() {
     );
 
     matchIndex = result.value.search(percentageRegex);
+  }
+}
+
+function replaceTgAndCotg() {
+  const tgRegex = /\btg\([0-9a-zA-Z()*\/+\-%]+\)/g;
+  let matchIndex = result.value.search(tgRegex);
+
+  while (matchIndex >= 0) {
+    const stringStartingWithMatch = result.value.substring(matchIndex);
+
+    const tgExpression = stringStartingWithMatch.substring(
+      3,
+      stringStartingWithMatch.length - 1
+    );
+
+    result.value = result.value.replace(`tg(${tgExpression})`, `tanh(${tgExpression})`);
+
+    matchIndex = result.value.search(tgRegex);
+  }
+
+  const cotgRegex = /cotg\([0-9a-zA-Z()*\/+\-%]+\)/g;
+  matchIndex = result.value.search(cotgRegex);
+  console.log(result.value);
+
+  while (matchIndex >= 0) {
+    const stringStartingWithMatch = result.value.substring(matchIndex);
+
+    const cotgExpression = stringStartingWithMatch.substring(
+      5,
+      stringStartingWithMatch.length - 1
+    );
+
+    result.value = result.value.replace(
+      `cotg(${cotgExpression})`,
+      `coth(${cotgExpression})`
+    );
+
+    matchIndex = result.value.search(cotgRegex);
   }
 }
 </script>
