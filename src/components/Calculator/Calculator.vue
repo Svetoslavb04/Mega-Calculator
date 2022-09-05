@@ -52,9 +52,9 @@ function handleOperation(operation) {
   }
 
   if (operation !== "%") {
-    result.value = `${math.evaluate(`${numbers[0]} ${operation} ${numbers[1]}`)}`;
+    result.value = `${(math.evaluate(`${numbers[0]} ${operation} ${numbers[1]}`)).toFixed(11)}`;
   } else {
-    result.value = `${math.evaluate(`${numbers[0]}${operation} * ${numbers[1]}`)}`;
+    result.value = `${(math.evaluate(`${numbers[0]}${operation} * ${numbers[1]}`)).toFixed(11)}`;
   }
 }
 </script>
