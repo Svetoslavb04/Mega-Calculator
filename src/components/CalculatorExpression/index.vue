@@ -75,10 +75,13 @@ function replacePercentageExpression() {
   function replaceSqrt(){
     const sqrtRegex = /√[0-9]+/g;
     let match = result.value.match(sqrtRegex);
-    match.forEach(element => {
+    if (match) {
+      match.forEach(element => {
       const number = element.substring(1);
       result.value = result.value.replace(`√${number}`, `sqrt(${number})`);
-    });
+      });
+    }
+    
 
 }
 
