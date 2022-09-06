@@ -24,7 +24,19 @@ const onButtonClick = (symbol) => {
 
  if(symbol === "CE" ){
    if (result.value.length>1) {
+
+      if (result.value[result.value.length-1] === 'n') {
+         return result.value = result.value.slice(0,-3); 
+      }else if (result.value[result.value.length-1] === 's') {
+        return result.value = result.value.slice(0,-3);
+      }else if (result.value[result.value.length-3] === 'o') {
+        return result.value = result.value.slice(0,-4);
+      }else if (result.value[result.value.length-1] === 'g') {
+        return result.value = result.value.slice(0,-2);
+      }
+
       return result.value = result.value.slice(0,-1); 
+
     }else return result.value = "0";
   }
 
