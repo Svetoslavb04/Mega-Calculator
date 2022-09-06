@@ -18,41 +18,78 @@ const math = create(all, {
 const { result } = defineProps(["result"]);
 
 function onButtonClick(symbol) {
-  const operation = operationSymbols.filter((symbol) => result.value.includes(symbol))[0];
+  const operation = operationSymbols.filter((symbol) =>
+    result.value.slice(1).includes(symbol)
+  )[0];
 
   if (
-    (result.value === "" || result.value === "0" || result.value === "Error") &&
-    operationSymbols.some((opSymbol) => opSymbol === symbol)
+    (["", "0", "Error", "📷"].includes(result.value) &&
+      operationSymbols.some((opSymbol) =>
+        opSymbol === "-" ? false : opSymbol === symbol
+      )) ||
+    symbol === "📷"
   ) {
     return;
   }
 
   if (symbol === "C") {
-    result.value = "0";
-  } else if(symbol ==="CE"){
-    if (result.value.length>1) {
-      result.value = result.value.slice(0,-1);
-    }else result.value = "0";
-  } else if (result.value === "0" || result.value === "Error") {
-    result.value = symbol;
-  } else if (operationSymbols.some((opSymbol) => opSymbol === symbol) && operation) {
-    handleOperation(operation);
-  } else if (
-    operationSymbols.some((symbol) => result.value.includes(symbol)) &&
+    return (result.value = "0");
+  }
+
+  if (symbol === "CE") {
+    if (result.value.length > 1 && !["Error", "Infinity"].includes(result.value)) {
+      result.value = result.value.slice(0, -1);
+    } else result.value = "0";
+
+    return;
+  }
+
+  if (result.value === "0" || result.value === "Error") {
+    return (result.value = symbol);
+  }
+
+  if (symbol === "-") {
+    
+    const numbers = result.value.split(' ');
+    
+    if (!isNaN(numbers[0]) && !isNaN(numbers[2])) {
+      return handleOperation(operation);
+    }
+
+    if (operation) {
+      return result.value += ' ' + symbol;
+    }
+    
+    if (result.value.length === 1 && ["0", "-"].includes(result.value)) {
+      return;
+    }
+  }
+
+  if (operationSymbols.some((opSymbol) => opSymbol === symbol) && operation) {
+    return handleOperation(operation);
+  }
+  
+  if (
+    operationSymbols.some((symbol) => result.value.slice(1).includes(symbol)) &&
     operationSymbols.includes(symbol)
   ) {
-    handleOperation(symbol);
-  } else if (symbol === "=") {
+    return handleOperation(symbol);
+  }
+
+  if (symbol === "=") {
     return;
+  }
+  
+  if (
+    (calculateableSymbols.includes(result.value[result.value.length - 1]) &&
+      calculateableSymbols.includes(symbol)) ||
+    (result.value[result.value.length - 1] === "-" && result.value[0] === "0") ||
+    (result.value[0] === "-" && result.value.length === 1) ||
+    (result.value.indexOf(operation) != result.value.length - 1 && !isNaN(symbol))
+  ) {
+    result.value += symbol;
   } else {
-    if (
-      calculateableSymbols.includes(result.value[result.value.length - 1]) &&
-      calculateableSymbols.includes(symbol)
-    ) {
-      result.value += symbol;
-    } else {
-      result.value += " " + symbol;
-    }
+    result.value += " " + symbol;
   }
 }
 
