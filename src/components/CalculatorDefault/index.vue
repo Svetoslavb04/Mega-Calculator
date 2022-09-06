@@ -49,17 +49,16 @@ function onButtonClick(symbol) {
   }
 
   if (symbol === "-") {
-    
-    const numbers = result.value.split(' ');
-    
+    const numbers = result.value.split(" ");
+
     if (!isNaN(numbers[0]) && !isNaN(numbers[2])) {
       return handleOperation(operation);
     }
 
     if (operation) {
-      return result.value += ' ' + symbol;
+      return (result.value += " " + symbol);
     }
-    
+
     if (result.value.length === 1 && ["0", "-"].includes(result.value)) {
       return;
     }
@@ -68,7 +67,7 @@ function onButtonClick(symbol) {
   if (operationSymbols.some((opSymbol) => opSymbol === symbol) && operation) {
     return handleOperation(operation);
   }
-  
+
   if (
     operationSymbols.some((symbol) => result.value.slice(1).includes(symbol)) &&
     operationSymbols.includes(symbol)
@@ -79,7 +78,7 @@ function onButtonClick(symbol) {
   if (symbol === "=") {
     return;
   }
-  
+
   if (
     (calculateableSymbols.includes(result.value[result.value.length - 1]) &&
       calculateableSymbols.includes(symbol)) ||
@@ -107,9 +106,16 @@ function handleOperation(operation) {
     `${number_1} % ${number_2}`,
     `${number_1}% * ${number_2}`
   );
-  console.log(result.value);
 
-  result.value = `${math.evaluate(result.value)}`;
+  try {
+
+    result.value = `${math.evaluate(result.value)}`;
+
+  } catch (error) {
+
+    result.value = "Error";
+
+  }
 }
 </script>
 <template>
