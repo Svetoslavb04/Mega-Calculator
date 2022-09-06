@@ -24,13 +24,19 @@ const onButtonClick = (symbol) => {
 
  if(symbol === "CE" ){
    if (result.value.length>1) {
-      return result.value = result.value.slice(0,-1);
+      return result.value = result.value.slice(0,-1); 
     }else return result.value = "0";
   }
+
+  if (symbol === "x<sup>y</sup>") {
+    return result.value += "^";
+  }
+
 
   if (symbol === "=") {
     replacePercentageExpression();
     replaceTgAndCotg();
+    replaceSqrt();
 
     return (result.value = `${math.evaluate(result.value)}`);
   }
@@ -64,6 +70,16 @@ function replacePercentageExpression() {
 
     matchIndex = result.value.search(percentageRegex);
   }
+}
+
+  function replaceSqrt(){
+    const sqrtRegex = /√[0-9]+/g;
+    let match = result.value.match(sqrtRegex);
+    match.forEach(element => {
+      const number = element.substring(1);
+      result.value = result.value.replace(`√${number}`, `sqrt(${number})`);
+    });
+
 }
 
 function replaceTgAndCotg() {
