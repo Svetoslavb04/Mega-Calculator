@@ -27,7 +27,8 @@ function onButtonClick(symbol) {
       operationSymbols.some((opSymbol) =>
         opSymbol === "-" ? false : opSymbol === symbol
       )) ||
-    symbol === "📷"
+    symbol === "📷" ||
+    (result.value[result.value.length - 1] === "." && symbol === ".")
   ) {
     return;
   }
@@ -108,13 +109,9 @@ function handleOperation(operation) {
   );
 
   try {
-
     result.value = `${math.evaluate(result.value)}`;
-
   } catch (error) {
-
     result.value = "Error";
-
   }
 }
 </script>
