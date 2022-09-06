@@ -40,14 +40,14 @@ const onButtonClick = (symbol) => {
     }else return result.value = "0";
   }
 
-  if (symbol === "x<sup>y</sup>") {
+  if (symbol === "x<sup>y</sup>") { 
     return result.value += "^";
   }
 
 
   if (symbol === "=") {
     replacePercentageExpression();
-    replaceTgAndCotg();
+    replaceTgAndCotg(); 
     replaceSqrt();
 
     return (result.value = `${math.evaluate(result.value)}`);
