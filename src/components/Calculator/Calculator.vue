@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 import {
   calculatorModes,
@@ -17,6 +17,11 @@ const props = defineProps(["mode"]);
 const result = ref({
   value: "0",
 });
+
+watch(
+  () => props.mode,
+  () => (result.value.value = "0")
+);
 </script>
 <template>
   <div
