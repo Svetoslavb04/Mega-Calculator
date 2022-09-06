@@ -23,7 +23,7 @@ const onButtonClick = (symbol) => {
   }
 
  if(symbol === "CE" ){
-    if (result.value.length>1) {
+   if (result.value.length>1) {
       return result.value = result.value.slice(0,-1);
     }else return result.value = "0";
   }
