@@ -32,11 +32,19 @@ const onButtonClick = props.onButtonClick;
   color: white;
 }
 
-.bg-color-primary {
-  background-color: var(--primary);
-}
+  .bg-color-primary {
+    background-color: var(--primary);
+    
+  }
+  .bg-color-primary:hover {
+    background-color: var(--primary-hover);
+   
+  }
 
 .bg-color-secondary {
   background-color: var(--secondary);
+}
+.bg-color-secondary:hover {
+  background-color: var(--secondary-hover);
 }
 </style>
