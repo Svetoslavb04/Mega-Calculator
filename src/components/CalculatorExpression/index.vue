@@ -14,7 +14,7 @@ const { result } = defineProps(["result"]);
 
 const math = create(all, {
   number: "BigNumber",
-  precision: 11,
+  precision: 11
 });
 
 const onButtonClick = (symbol) => {
@@ -78,7 +78,7 @@ function replaceTgAndCotg() {
       stringStartingWithMatch.length - 1
     );
 
-    result.value = result.value.replace(`tg(${tgExpression})`, `tanh(${tgExpression})`);
+    result.value = result.value.replace(`tg(${tgExpression})`, `tan(${tgExpression})`);
 
     matchIndex = result.value.search(tgRegex);
   }
@@ -97,7 +97,7 @@ function replaceTgAndCotg() {
 
     result.value = result.value.replace(
       `cotg(${cotgExpression})`,
-      `coth(${cotgExpression})`
+      `cot(${cotgExpression})`
     );
 
     matchIndex = result.value.search(cotgRegex);
