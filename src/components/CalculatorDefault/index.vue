@@ -118,11 +118,39 @@ function handleOperation(operation) {
 }
 
 function onCameraButtonClick(e) {
-  console.log(e);
-  const image = e.target.files[0];
-  Tesseract.recognize(image, "eng").then(({ data: { text } }) => {
-    console.log(text);
-  });
+  const data = new FormData();
+  data.append("locale", "en");
+  data.append("image", e.target.files[0], "Untitled.jpg");
+
+  const options = {
+    method: "POST",
+    headers: {
+      "X-RapidAPI-Key": "c400b29832msh6666338ddbcfb72p1bf952jsn8aaf15ca7975",
+      "X-RapidAPI-Host": "photomath1.p.rapidapi.com",
+    },
+    body: data,
+  };
+
+  fetch("https://photomath1.p.rapidapi.com/maths/solve-problem", options)
+    .then((res) => res.json())
+    .then((res) => {
+
+      let solution = res.result.groups[0].entries[0].preview.content.solution;
+
+      while (true) {
+        if (solution.children) {
+          solution = solution.children[solution.children.length - 1];
+        } else {
+          break;
+        }
+      }
+
+      result.value = solution.value;
+
+    })
+    .catch((err) => {
+      result.value = "Error";
+    });
 }
 </script>
 <template>
