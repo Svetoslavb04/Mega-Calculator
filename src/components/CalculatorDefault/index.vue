@@ -1,5 +1,6 @@
 <script setup>
 import { create, all } from "mathjs";
+import Tesseract from "tesseract.js";
 
 import {
   calculatorModes,
@@ -9,6 +10,7 @@ import {
 } from "../Calculator/config.js";
 
 import CustomButton from "../../components/CustomButton.vue";
+import ImageUploadButton from "../../components/ImageUploadButton.vue";
 
 const math = create(all, {
   number: "BigNumber",
@@ -114,6 +116,14 @@ function handleOperation(operation) {
     result.value = "Error";
   }
 }
+
+function onCameraButtonClick(e) {
+  console.log(e);
+  const image = e.target.files[0];
+  Tesseract.recognize(image, "eng").then(({ data: { text } }) => {
+    console.log(text);
+  });
+}
 </script>
 <template>
   <div id="calculator-default" class="calculator-buttons-wrapper">
@@ -174,13 +184,13 @@ function handleOperation(operation) {
         v-for="data in [
           { symbol: '0', bgColor: 'secondary' },
           { symbol: '.', bgColor: 'secondary' },
-          { symbol: '&#128247;', bgColor: 'secondary' },
-          { symbol: '=', bgColor: 'primary' },
         ]"
         :backgroundColor="data.bgColor"
         :symbol="data.symbol"
         :onButtonClick="onButtonClick"
       />
+      <ImageUploadButton id="image-upload" :onChange="onCameraButtonClick" />
+      <CustomButton symbol="=" backgroundColor="primary" :onButtonClick="onButtonClick" />
     </div>
   </div>
 </template>

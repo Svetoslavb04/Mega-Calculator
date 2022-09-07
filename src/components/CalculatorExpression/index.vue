@@ -116,7 +116,6 @@ function replaceTgAndCotg() {
 
   const cotgRegex = /cotg\([0-9a-zA-Z()*\/+\-%]+\)/g;
   matchIndex = result.value.search(cotgRegex);
-  console.log(result.value);
 
   while (matchIndex >= 0) {
     const stringStartingWithMatch = result.value.substring(matchIndex);
