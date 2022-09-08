@@ -14,7 +14,7 @@ const { result } = defineProps(["result"]);
 
 const math = create(all, {
   number: "BigNumber",
-  precision: 11,
+  precision: 11
 });
 
 const onButtonClick = (symbol) => {
@@ -24,13 +24,31 @@ const onButtonClick = (symbol) => {
 
  if(symbol === "CE" ){
    if (result.value.length>1) {
-      return result.value = result.value.slice(0,-1);
+
+      if (result.value[result.value.length-1] === 'n') {
+         return result.value = result.value.slice(0,-3); 
+      }else if (result.value[result.value.length-1] === 's') {
+        return result.value = result.value.slice(0,-3);
+      }else if (result.value[result.value.length-3] === 'o') {
+        return result.value = result.value.slice(0,-4);
+      }else if (result.value[result.value.length-1] === 'g') {
+        return result.value = result.value.slice(0,-2);
+      }
+
+      return result.value = result.value.slice(0,-1); 
+
     }else return result.value = "0";
   }
 
+  if (symbol === "x<sup>y</sup>") { 
+    return result.value += "^";
+  }
+
+
   if (symbol === "=") {
     replacePercentageExpression();
-    replaceTgAndCotg();
+    replaceTgAndCotg(); 
+    replaceSqrt();
 
     return (result.value = `${math.evaluate(result.value)}`);
   }
@@ -66,6 +84,19 @@ function replacePercentageExpression() {
   }
 }
 
+  function replaceSqrt(){
+    const sqrtRegex = /√\(.+\)/g;
+    let match = result.value.match(sqrtRegex);
+    if (match) {
+      match.forEach(element => {
+      const number = element.substring(1);
+      result.value = result.value.replace(`√${number}`, `sqrt(${number})`);
+      });
+    }
+    
+
+}
+
 function replaceTgAndCotg() {
   const tgRegex = /\btg\([0-9a-zA-Z()*\/+\-%]+\)/g;
   let matchIndex = result.value.search(tgRegex);
@@ -78,14 +109,13 @@ function replaceTgAndCotg() {
       stringStartingWithMatch.length - 1
     );
 
-    result.value = result.value.replace(`tg(${tgExpression})`, `tanh(${tgExpression})`);
+    result.value = result.value.replace(`tg(${tgExpression})`, `tan(${tgExpression})`);
 
     matchIndex = result.value.search(tgRegex);
   }
 
   const cotgRegex = /cotg\([0-9a-zA-Z()*\/+\-%]+\)/g;
   matchIndex = result.value.search(cotgRegex);
-  console.log(result.value);
 
   while (matchIndex >= 0) {
     const stringStartingWithMatch = result.value.substring(matchIndex);
@@ -97,7 +127,7 @@ function replaceTgAndCotg() {
 
     result.value = result.value.replace(
       `cotg(${cotgExpression})`,
-      `coth(${cotgExpression})`
+      `cot(${cotgExpression})`
     );
 
     matchIndex = result.value.search(cotgRegex);
