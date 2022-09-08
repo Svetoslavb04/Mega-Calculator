@@ -94,61 +94,18 @@ function onCameraButtonClick(e) {
 }
 
 const onButtonClick = (symbol) => {
-  if (symbol === "C") {
-    return (result.value = "0");
-  }
-
-  if (symbol === "📷") {
-    return;
-  }
-
-  if (symbol === "CE") {
-    return clearElement();
-  }
-
-  const prevSymbol = result.value[result.value.length - 1];
-  if (operationSymbols.includes(prevSymbol) && operationSymbols.includes(symbol)) {
-    if (symbol === "=") {
-      return;
-    } else return (result.value = result.value.replace(prevSymbol, symbol));
-  }
-
-  if (symbol === "x<sup>y</sup>") {
-    if (operationSymbols.includes(prevSymbol)) {
-      result.value = result.value.replace(prevSymbol, "^");
-      return;
-    } else return (result.value += "^");
-  }
-
-  if (symbol === "=") {
-    replacePercentageExpression();
-    replaceTgAndCotg();
-    replaceSqrt();
-
-    return (result.value = `${math.evaluate(result.value)}`);
-  }
-
-  if (result.value === "0" && !operationSymbols.includes(symbol)) {
-    return (result.value = symbol);
-  }
-
-  const f = resultContainsTrigonometricSymbol();
-<<<<<<< HEAD
-  if (f!= -1) {
+  if (f != -1) {
     clearElement();
-    if (operationSymbols.includes(result.value[result.value.length-1]) && operationSymbols.include(symbol)) {
+    if (
+      operationSymbols.includes(result.value[result.value.length - 1]) &&
+      operationSymbols.include(symbol)
+    ) {
       return;
-    }else return result.value += symbol;
+    } else return (result.value += symbol);
 
     // if (operationSymbols.includes(prevSymbol) && operationSymbols.include(symbol)) {
     //   return result.value = result.value.replace(f, "");
     // }else return result.value = result.value.replace(f, symbol);
-=======
-  if (f != -1) {
-    if (operationSymbols.includes(prevSymbol) && operationSymbols.include(symbol)) {
-      return (result.value = result.value.replace(f, ""));
-    } else return (result.value = result.value.replace(f, symbol));
->>>>>>> c7a2bed2e0d96d494d5b52eef6262e2abc403313
   }
 
   const expressionParts = result.value.split(" ");
