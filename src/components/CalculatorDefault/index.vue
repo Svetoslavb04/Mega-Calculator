@@ -175,9 +175,14 @@ function onCameraButtonClick(e) {
           isProcessingImage.value = false;
         })
         .catch((err) => {
+          isProcessingImage.value = false
           result.value = "Error";
         });
     },
+    error() {
+      isProcessingImage.value = false;
+      result.value = 'Error'
+    }
   });
 }
 </script>
