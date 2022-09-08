@@ -133,9 +133,8 @@ function onCameraButtonClick(e) {
     convertSize: 100,
     maxWidth: 500,
     success(resultBlob) {
-      
       const newFile = new File([resultBlob], "image.jpg", {
-        type: result.type
+        type: result.type,
       });
 
       const data = new FormData();
@@ -156,7 +155,6 @@ function onCameraButtonClick(e) {
       fetch("https://photomath1.p.rapidapi.com/maths/solve-problem", options)
         .then((res) => res.json())
         .then((res) => {
-
           if (res.message) {
             throw res.message;
           }
@@ -170,19 +168,19 @@ function onCameraButtonClick(e) {
               break;
             }
           }
-          
+
           result.value = solution.value;
           isProcessingImage.value = false;
         })
         .catch((err) => {
-          isProcessingImage.value = false
+          isProcessingImage.value = false;
           result.value = "Error";
         });
     },
     error() {
       isProcessingImage.value = false;
-      result.value = 'Error'
-    }
+      result.value = "Error";
+    },
   });
 }
 </script>
@@ -250,29 +248,17 @@ function onCameraButtonClick(e) {
         :symbol="data.symbol"
         :onButtonClick="onButtonClick"
       />
-      <div>
-        <CustomButton
-          v-if="isProcessingImage"
-          :component="Spinner"
-          componentClass="image-loading-spinner"
-          backgroundColor="secondary"
-          :onButtonClick="onButtonClick"
-        />
-        <ImageUploadButton v-else id="image-upload" :onChange="onCameraButtonClick" />
-      </div>
+      <CustomButton
+        v-if="isProcessingImage"
+        :component="Spinner"
+        componentClass="image-loading-spinner"
+        backgroundColor="secondary"
+        :onButtonClick="onButtonClick"
+      />
+      <ImageUploadButton v-else id="image-upload" :onChange="onCameraButtonClick" />
       <CustomButton symbol="=" backgroundColor="primary" :onButtonClick="onButtonClick" />
     </div>
   </div>
 </template>
 <style>
-.image-loading-spinner {
-  width: 63px;
-  height: 63px;
-}
-
-.image-loading-spinner div {
-  border-width: 6px;
-  width: 48px;
-  height: 48px;
-}
 </style>

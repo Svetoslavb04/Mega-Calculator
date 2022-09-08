@@ -1,6 +1,5 @@
 <script setup>
-const { id, onChange } = defineProps(["id", "onChange"]);
-
+const { id, onChange, classCSS } = defineProps(["id", "onChange, classCSS"]);
 </script>
 <template>
   <input
@@ -16,11 +15,12 @@ const { id, onChange } = defineProps(["id", "onChange"]);
     :for="id"
     v-html="'&#128247;'"
     class="image-upload-label custom-button bg-color-secondary"
+    :class="classCSS"
   ></label>
 </template>
 <style>
 .image-upload-label {
-  font-size: 2em;
+  font-size: 2.6em;
 }
 
 .image-upload-input {
@@ -37,7 +37,7 @@ const { id, onChange } = defineProps(["id", "onChange"]);
   height: 75px;
   border-radius: 5px;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
   cursor: pointer;
 }
@@ -47,5 +47,26 @@ const { id, onChange } = defineProps(["id", "onChange"]);
 }
 .bg-color-secondary:hover {
   background-color: var(--secondary-hover);
+}
+
+@media (max-width: 500px) {
+  .image-upload-label {
+    font-size: 2em;
+  }
+  .custom-button {
+    width: 55px;
+    height: 60px;
+  }
+}
+
+@media (max-width: 650px) {
+  .expression-mode .custom-button {
+    width: 55px;
+    height: 60px;
+  }
+
+  .expression-mode .image-upload-label {
+    font-size: 2em;
+  }
 }
 </style>

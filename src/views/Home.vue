@@ -33,8 +33,7 @@ const onCalculatorModeChange = () =>
 
 <style>
 main {
-  min-height: 100vh;
-  margin: 4rem 0;
+  margin: 3rem 0;
 }
 
 .calculator-mode-switch-wrapper {
@@ -54,4 +53,11 @@ main {
   width: fit-content;
   margin: auto;
 }
+
+@media (max-width: 500px) {
+  main {
+    margin: 2rem 15px;
+  }
+}
+
 </style>

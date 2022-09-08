@@ -1,5 +1,7 @@
 <script setup>
+import { ref } from "vue";
 import { create, all } from "mathjs";
+import Compressor from "compressorjs";
 
 import {
   calculatorModes,
@@ -9,45 +11,114 @@ import {
 } from "../Calculator/config.js";
 
 import CustomButton from "../../components/CustomButton.vue";
+import ImageUploadButton from "../../components/ImageUploadButton.vue";
+import Spinner from "../../components/Spinner.vue";
 
 const { result } = defineProps(["result"]);
+const isMobileViewEnabled = ref(window.innerWidth <= 650);
+const isProcessingImage = ref(false);
+
+window.addEventListener(
+  "resize",
+  () => (isMobileViewEnabled.value = window.innerWidth <= 650)
+);
 
 const math = create(all, {
   number: "BigNumber",
-  precision: 11
+  precision: 11,
 });
+
+function onCameraButtonClick(e) {
+  const file = e.target.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  new Compressor(file, {
+    quality: 0.2,
+    convertSize: 100,
+    maxWidth: 500,
+    success(resultBlob) {
+      const newFile = new File([resultBlob], "image.jpg", {
+        type: result.type,
+      });
+
+      const data = new FormData();
+      data.append("locale", "en");
+      data.append("image", newFile);
+
+      const options = {
+        method: "POST",
+        headers: {
+          "X-RapidAPI-Key": "c400b29832msh6666338ddbcfb72p1bf952jsn8aaf15ca7975",
+          "X-RapidAPI-Host": "photomath1.p.rapidapi.com",
+        },
+        body: data,
+      };
+
+      isProcessingImage.value = true;
+
+      fetch("https://photomath1.p.rapidapi.com/maths/solve-problem", options)
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.message) {
+            throw res.message;
+          }
+
+          let solution = res.result.groups[0].entries[0].preview.content.solution;
+
+          while (true) {
+            if (solution.children) {
+              solution = solution.children[solution.children.length - 1];
+            } else {
+              break;
+            }
+          }
+
+          result.value = solution.value;
+          isProcessingImage.value = false;
+        })
+        .catch((err) => {
+          isProcessingImage.value = false;
+          result.value = "Error";
+        });
+    },
+    error() {
+      isProcessingImage.value = false;
+      result.value = "Error";
+    },
+  });
+}
 
 const onButtonClick = (symbol) => {
   if (symbol === "C") {
     return (result.value = "0");
   }
 
- if(symbol === "CE" ){
-   if (result.value.length>1) {
-
-      if (result.value[result.value.length-1] === 'n') {
-         return result.value = result.value.slice(0,-3); 
-      }else if (result.value[result.value.length-1] === 's') {
-        return result.value = result.value.slice(0,-3);
-      }else if (result.value[result.value.length-3] === 'o') {
-        return result.value = result.value.slice(0,-4);
-      }else if (result.value[result.value.length-1] === 'g') {
-        return result.value = result.value.slice(0,-2);
+  if (symbol === "CE") {
+    if (result.value.length > 1) {
+      if (result.value[result.value.length - 1] === "n") {
+        return (result.value = result.value.slice(0, -3));
+      } else if (result.value[result.value.length - 1] === "s") {
+        return (result.value = result.value.slice(0, -3));
+      } else if (result.value[result.value.length - 3] === "o") {
+        return (result.value = result.value.slice(0, -4));
+      } else if (result.value[result.value.length - 1] === "g") {
+        return (result.value = result.value.slice(0, -2));
       }
 
-      return result.value = result.value.slice(0,-1); 
-
-    }else return result.value = "0";
+      return (result.value = result.value.slice(0, -1));
+    } else return (result.value = "0");
   }
 
-  if (symbol === "x<sup>y</sup>") { 
-    return result.value += "^";
+  if (symbol === "x<sup>y</sup>") {
+    return (result.value += "^");
   }
-
 
   if (symbol === "=") {
     replacePercentageExpression();
-    replaceTgAndCotg(); 
+    replaceTgAndCotg();
     replaceSqrt();
 
     return (result.value = `${math.evaluate(result.value)}`);
@@ -84,17 +155,15 @@ function replacePercentageExpression() {
   }
 }
 
-  function replaceSqrt(){
-    const sqrtRegex = /√\(.+\)/g;
-    let match = result.value.match(sqrtRegex);
-    if (match) {
-      match.forEach(element => {
+function replaceSqrt() {
+  const sqrtRegex = /√\(.+\)/g;
+  let match = result.value.match(sqrtRegex);
+  if (match) {
+    match.forEach((element) => {
       const number = element.substring(1);
       result.value = result.value.replace(`√${number}`, `sqrt(${number})`);
-      });
-    }
-    
-
+    });
+  }
 }
 
 function replaceTgAndCotg() {
@@ -135,7 +204,123 @@ function replaceTgAndCotg() {
 }
 </script>
 <template>
-  <div id="calculator-expression" class="calculator-buttons-wrapper">
+  <div
+    v-if="isMobileViewEnabled"
+    id="calculator-expression-mobile"
+    class="calculator-buttons-wrapper"
+  >
+    <div class="buttons-row">
+      <CustomButton
+        v-for="data in [
+          { symbol: 'C', bgColor: 'primary' },
+          { symbol: 'CE', bgColor: 'primary' },
+          { symbol: '*', bgColor: 'primary' },
+          { symbol: '/', bgColor: 'primary' },
+        ]"
+        :backgroundColor="data.bgColor"
+        :symbol="data.symbol"
+        :onButtonClick="onButtonClick"
+      />
+    </div>
+    <div class="buttons-row">
+      <CustomButton
+        v-for="data in [
+          { symbol: '7', bgColor: 'secondary' },
+          { symbol: '8', bgColor: 'secondary' },
+          { symbol: '9', bgColor: 'secondary' },
+          { symbol: '-', bgColor: 'primary' },
+        ]"
+        :backgroundColor="data.bgColor"
+        :symbol="data.symbol"
+        :onButtonClick="onButtonClick"
+      />
+    </div>
+    <div class="buttons-row">
+      <CustomButton
+        v-for="data in [
+          { symbol: '4', bgColor: 'secondary' },
+          { symbol: '5', bgColor: 'secondary' },
+          { symbol: '6', bgColor: 'secondary' },
+          { symbol: '+', bgColor: 'primary' },
+        ]"
+        :backgroundColor="data.bgColor"
+        :symbol="data.symbol"
+        :onButtonClick="onButtonClick"
+      />
+    </div>
+    <div class="buttons-row">
+      <CustomButton
+        v-for="data in [
+          { symbol: '1', bgColor: 'secondary' },
+          { symbol: '2', bgColor: 'secondary' },
+          { symbol: '3', bgColor: 'secondary' },
+          { symbol: '%', bgColor: 'primary' },
+        ]"
+        :backgroundColor="data.bgColor"
+        :symbol="data.symbol"
+        :onButtonClick="onButtonClick"
+      />
+    </div>
+    <div class="buttons-row">
+      <CustomButton
+        v-for="data in [
+          { symbol: '0', bgColor: 'secondary' },
+          { symbol: '.', bgColor: 'secondary' },
+        ]"
+        :backgroundColor="data.bgColor"
+        :symbol="data.symbol"
+        :onButtonClick="onButtonClick"
+      />
+      <CustomButton
+        v-if="isProcessingImage"
+        :component="Spinner"
+        componentClass="image-loading-spinner"
+        backgroundColor="secondary"
+        :onButtonClick="onButtonClick"
+      />
+      <ImageUploadButton
+        classCSS="image-upload-label"
+        v-else
+        id="image-upload"
+        :onChange="onCameraButtonClick"
+      />
+    </div>
+    <div class="buttons-row">
+      <CustomButton
+        style="width: 100%"
+        symbol="="
+        backgroundColor="primary"
+        :onButtonClick="onButtonClick"
+      />
+    </div>
+    <div class="buttons-row">
+      <CustomButton
+        v-for="data in [
+          { symbol: '(', bgColor: 'primary' },
+          { symbol: ')', bgColor: 'primary' },
+          { symbol: 'x<sup>y</sup>', bgColor: 'primary' },
+          { symbol: '√', bgColor: 'primary' },
+        ]"
+        :backgroundColor="data.bgColor"
+        :symbol="data.symbol"
+        :onButtonClick="onButtonClick"
+      />
+    </div>
+    <div class="buttons-row">
+      <CustomButton
+        v-for="data in [
+          { symbol: 'sin', bgColor: 'primary' },
+          { symbol: 'cos', bgColor: 'primary' },
+          { symbol: 'tg', bgColor: 'primary' },
+          { symbol: 'cotg', bgColor: 'primary' },
+        ]"
+        :backgroundColor="data.bgColor"
+        :symbol="data.symbol"
+        :onButtonClick="onButtonClick"
+      />
+    </div>
+  </div>
+  <div v-else id="calculator-expression" class="calculator-buttons-wrapper">
     <div class="buttons-row">
       <CustomButton
         v-for="data in [
@@ -211,4 +396,12 @@ function replaceTgAndCotg() {
     </div>
   </div>
 </template>
-<style></style>
+<style scoped>
+@media (max-width: 650px) {
+  .custom-button {
+    width: 55px;
+    height: 60px;
+    align-items: center;
+  }
+}
+</style>
