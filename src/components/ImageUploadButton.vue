@@ -9,7 +9,7 @@ const { id, onChange } = defineProps(["id", "onChange"]);
     value=""
     :id="id"
     class="image-upload-input"
-    accept="image/png, image/jpeg, image/bmp, image/pbm"
+    accept="image/jpeg, image/jpg"
     @change="onChange"
   />
   <label

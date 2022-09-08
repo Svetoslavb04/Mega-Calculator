@@ -120,55 +120,6 @@ function handleOperation(operation) {
   }
 }
 
-function converFileToJPG(file) {
-  const convertDataURIToBinary = (dataURI) => {
-    const BASE64_MARKER = ";base64,";
-    const base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
-    const base64 = dataURI.substring(base64Index);
-    const raw = window.atob(base64);
-    const rawLength = raw.length;
-    const array = new Uint8Array(new ArrayBuffer(rawLength));
-
-    for (i = 0; i < rawLength; i++) {
-      array[i] = raw.charCodeAt(i);
-    }
-    return array;
-  };
-
-  const image = new Image();
-
-  image.src = file.nativeURL;
-  const canvas = document.createElement("canvas");
-  canvas.width = image.width;
-  canvas.height = image.height;
-  canvas.getContext("2d").drawImage(image, 0, 0);
-
-  image.onload = function () {
-    //save to temp location??
-
-    file.createWriter(function (fileWriter) {
-      file.onWriteEnd = function (e) {
-        console.log("Write completed.");
-      };
-
-      file.onError = function (e) {
-        console.log("Write failed: " + e.toString());
-      };
-
-      // Create a new Blob and write it to log.txt.
-      const ui8a = convertDataURIToBinary(image);
-
-      const blob = new Blob(ui8a.buffer, { type: "image/jpeg" });
-
-      fileWriter.write(blob);
-    }, errorHandler);
-  };
-
-  image.src = canvas.toDataURL("image/jpg");
-
-  return image;
-}
-
 function onCameraButtonClick(e) {
   const data = new FormData();
   data.append("locale", "en");
@@ -188,7 +139,7 @@ function onCameraButtonClick(e) {
   fetch("https://photomath1.p.rapidapi.com/maths/solve-problem", options)
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
+      
       let solution = res.result.groups[0].entries[0].preview.content.solution;
 
       while (true) {
