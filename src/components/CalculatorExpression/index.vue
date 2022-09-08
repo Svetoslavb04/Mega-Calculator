@@ -62,9 +62,14 @@ const onButtonClick = (symbol) => {
 
   const f = resultContainsTrigonometricSymbol();
   if (f!= -1) {
-    if (operationSymbols.includes(prevSymbol) && operationSymbols.include(symbol)) {
-      return result.value = result.value.replace(f, "");
-    }else return result.value = result.value.replace(f, symbol);
+    clearElement();
+    if (operationSymbols.includes(result.value[result.value.length-1]) && operationSymbols.include(symbol)) {
+      return;
+    }else return result.value += symbol;
+
+    // if (operationSymbols.includes(prevSymbol) && operationSymbols.include(symbol)) {
+    //   return result.value = result.value.replace(f, "");
+    // }else return result.value = result.value.replace(f, symbol);
   }
   
 
