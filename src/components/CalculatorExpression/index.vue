@@ -94,28 +94,56 @@ function onCameraButtonClick(e) {
 }
 
 const onButtonClick = (symbol) => {
-  if (f != -1) {
-    clearElement();
-    if (
-      operationSymbols.includes(result.value[result.value.length - 1]) &&
-      operationSymbols.include(symbol)
-    ) {
+  if (symbol === "C") {
+    return (result.value = "0");
+  }
+  if (symbol === "📷") {
       return;
-    } else return (result.value += symbol);
-
+    }
+ if(symbol === "CE" ){
+   return clearElement();
+  }
+  const prevSymbol = result.value[result.value.length-1];
+  if (operationSymbols.includes(prevSymbol) && operationSymbols.includes(symbol)) {
+    if (symbol === "=") {
+      return;
+    }else return result.value = result.value.replace(prevSymbol, symbol);
+   
+   } 
+  if (symbol === "x<sup>y</sup>") { 
+    if (operationSymbols.includes(prevSymbol)) {
+      result.value = result.value.replace(prevSymbol, "^"); 
+      return;
+    }else return result.value += "^";
+  }
+  if (symbol === "=") {
+    replacePercentageExpression();
+    replaceTgAndCotg(); 
+    replaceSqrt();
+    return (result.value = `${math.evaluate(result.value)}`);
+  }
+  if (result.value === "0" && !operationSymbols.includes(symbol)) {
+    return (result.value = symbol);
+  }
+  const f = resultContainsTrigonometricSymbol();
+  if (f!= -1) {
+    clearElement();
+    if (operationSymbols.includes(result.value[result.value.length-1]) && operationSymbols.include(symbol)) {
+      return;
+    }else return result.value += symbol;
     // if (operationSymbols.includes(prevSymbol) && operationSymbols.include(symbol)) {
     //   return result.value = result.value.replace(f, "");
     // }else return result.value = result.value.replace(f, symbol);
   }
-
+  
   const expressionParts = result.value.split(" ");
   const lastExpressionPart = expressionParts[expressionParts.length - 1];
-
   if (operationSymbols.some((symbol) => !lastExpressionPart.includes(symbol))) {
     result.value += symbol;
   } else {
     result.value += " " + symbol;
   }
+  
 };
 
 function clearElement() {
