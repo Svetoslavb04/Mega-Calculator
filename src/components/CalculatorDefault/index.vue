@@ -1,6 +1,6 @@
 <script setup>
+import { ref } from "vue";
 import { create, all } from "mathjs";
-import Tesseract from "tesseract.js";
 
 import {
   calculatorModes,
@@ -11,6 +11,7 @@ import {
 
 import CustomButton from "../../components/CustomButton.vue";
 import ImageUploadButton from "../../components/ImageUploadButton.vue";
+import Spinner from "../../components/Spinner.vue";
 
 const math = create(all, {
   number: "BigNumber",
@@ -18,6 +19,8 @@ const math = create(all, {
 });
 
 const { result } = defineProps(["result"]);
+
+const isProcessingImage = ref(false);
 
 function onButtonClick(symbol) {
   const operation = operationSymbols.filter((symbol) =>
@@ -117,10 +120,59 @@ function handleOperation(operation) {
   }
 }
 
+function converFileToJPG(file) {
+  const convertDataURIToBinary = (dataURI) => {
+    const BASE64_MARKER = ";base64,";
+    const base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+    const base64 = dataURI.substring(base64Index);
+    const raw = window.atob(base64);
+    const rawLength = raw.length;
+    const array = new Uint8Array(new ArrayBuffer(rawLength));
+
+    for (i = 0; i < rawLength; i++) {
+      array[i] = raw.charCodeAt(i);
+    }
+    return array;
+  };
+
+  const image = new Image();
+
+  image.src = file.nativeURL;
+  const canvas = document.createElement("canvas");
+  canvas.width = image.width;
+  canvas.height = image.height;
+  canvas.getContext("2d").drawImage(image, 0, 0);
+
+  image.onload = function () {
+    //save to temp location??
+
+    file.createWriter(function (fileWriter) {
+      file.onWriteEnd = function (e) {
+        console.log("Write completed.");
+      };
+
+      file.onError = function (e) {
+        console.log("Write failed: " + e.toString());
+      };
+
+      // Create a new Blob and write it to log.txt.
+      const ui8a = convertDataURIToBinary(image);
+
+      const blob = new Blob(ui8a.buffer, { type: "image/jpeg" });
+
+      fileWriter.write(blob);
+    }, errorHandler);
+  };
+
+  image.src = canvas.toDataURL("image/jpg");
+
+  return image;
+}
+
 function onCameraButtonClick(e) {
   const data = new FormData();
   data.append("locale", "en");
-  data.append("image", e.target.files[0], "Untitled.jpg");
+  data.append("image", e.target.files[0]);
 
   const options = {
     method: "POST",
@@ -131,10 +183,12 @@ function onCameraButtonClick(e) {
     body: data,
   };
 
+  isProcessingImage.value = true;
+
   fetch("https://photomath1.p.rapidapi.com/maths/solve-problem", options)
     .then((res) => res.json())
     .then((res) => {
-
+      console.log(res);
       let solution = res.result.groups[0].entries[0].preview.content.solution;
 
       while (true) {
@@ -146,7 +200,7 @@ function onCameraButtonClick(e) {
       }
 
       result.value = solution.value;
-
+      isProcessingImage.value = false;
     })
     .catch((err) => {
       result.value = "Error";
@@ -217,9 +271,33 @@ function onCameraButtonClick(e) {
         :symbol="data.symbol"
         :onButtonClick="onButtonClick"
       />
-      <ImageUploadButton id="image-upload" :onChange="onCameraButtonClick" />
+      <div>
+        <CustomButton
+          v-if="isProcessingImage"
+          :component="Spinner"
+          componentClass="image-loading-spinner"
+          backgroundColor="secondary"
+          :onButtonClick="onButtonClick"
+        />
+        <ImageUploadButton
+          v-else
+          id="image-upload"
+          :onChange="onCameraButtonClick"
+        />
+      </div>
       <CustomButton symbol="=" backgroundColor="primary" :onButtonClick="onButtonClick" />
     </div>
   </div>
 </template>
-<style lang=""></style>
+<style>
+.image-loading-spinner {
+  width: 63px;
+  height: 63px;
+}
+
+.image-loading-spinner div {
+  border-width: 6px;
+  width: 48px;
+  height: 48px;
+}
+</style>
