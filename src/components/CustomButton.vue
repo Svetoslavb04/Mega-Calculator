@@ -1,11 +1,11 @@
 <script setup>
-
-const props = defineProps(["backgroundColor", "symbol", "onButtonClick"]);
-
-const backgroundColor = props.backgroundColor;
-const symbol = props.symbol;
-const onButtonClick = props.onButtonClick;
-
+const {
+  prbackgroundColorops,
+  symbol,
+  onButtonClick,
+  component,
+  componentClass,
+} = defineProps(["backgroundColor", "symbol", "onButtonClick", "component", "componentClass"]);
 </script>
 <template>
   <div
@@ -13,8 +13,8 @@ const onButtonClick = props.onButtonClick;
     :class="`bg-color-${backgroundColor}`"
     @click="onButtonClick(symbol)"
   >
-    <h1 v-html="symbol" class="custom-button-symbol">
-    </h1>
+    <component v-if="component" :is="component" :classCSS="componentClass"></component>
+    <h1 v-if="symbol" v-html="symbol" class="custom-button-symbol"></h1>
   </div>
 </template>
 <style scoped>
@@ -32,14 +32,12 @@ const onButtonClick = props.onButtonClick;
   color: white;
 }
 
-  .bg-color-primary {
-    background-color: var(--primary);
-    
-  }
-  .bg-color-primary:hover {
-    background-color: var(--primary-hover);
-   
-  }
+.bg-color-primary {
+  background-color: var(--primary);
+}
+.bg-color-primary:hover {
+  background-color: var(--primary-hover);
+}
 
 .bg-color-secondary {
   background-color: var(--secondary);
