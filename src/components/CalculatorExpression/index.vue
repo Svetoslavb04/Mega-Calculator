@@ -103,24 +103,7 @@ const onButtonClick = (symbol) => {
     }
 
  if(symbol === "CE" ){
-   if (result.value.length>1) {
-      let characters = -1;
-
-      if (result.value[result.value.length-1] === 'n') {
-         characters = -3;
-      }else if (result.value[result.value.length-1] === 's') {
-        characters = -3;
-      }else if (result.value[result.value.length-3] === 'o') {
-        characters = -4;
-      }else if (result.value[result.value.length-1] === 'g') {
-        characters = -2;
-      }
-
-      if (result.value.length + characters <= 0) {
-        return result.value = "0";
-      } else return result.value = result.value.slice(0, characters); 
-
-    }else return result.value = "0";
+   return clearElement();
   }
 
   const prevSymbol = result.value[result.value.length-1];
@@ -150,11 +133,12 @@ const onButtonClick = (symbol) => {
     return (result.value = symbol);
   }
 
-  
 
   const f = resultContainsTrigonometricSymbol();
   if (f!= -1) {
-  return result.value = result.value.replace(f, symbol);
+    if (operationSymbols.includes(prevSymbol) && operationSymbols.include(symbol)) {
+      return result.value = result.value.replace(f, "");
+    }else return result.value = result.value.replace(f, symbol);
   }
   
 
@@ -169,6 +153,27 @@ const onButtonClick = (symbol) => {
 
   
 };
+
+function clearElement(){
+   if (result.value.length>1) {
+      let characters = -1;
+
+      if (result.value[result.value.length-1] === 'n') {
+         characters = -3;
+      }else if (result.value[result.value.length-1] === 's') {
+        characters = -3;
+      }else if (result.value[result.value.length-3] === 'o') {
+        characters = -4;
+      }else if (result.value[result.value.length-1] === 'g') {
+        characters = -2;
+      }
+
+      if (result.value.length + characters <= 0) {
+        return result.value = "0";
+      } else return result.value = result.value.slice(0, characters); 
+
+    }else return result.value = "0";
+}
 
 function resultContainsTrigonometricSymbol(){
   let trSymbol = -1;
