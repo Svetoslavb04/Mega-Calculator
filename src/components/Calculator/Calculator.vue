@@ -132,5 +132,16 @@ watch(
   #calculator.expression-mode {
     --calculator-width: 320px;
   }
+
+  .expression-mode .image-loading-spinner {
+    width: 55px;
+    height: 55px;
+  }
+
+  .expression-mode .image-loading-spinner div {
+    border-width: 4px;
+    width: 40px;
+    height: 40px;
+  }
 }
 </style>

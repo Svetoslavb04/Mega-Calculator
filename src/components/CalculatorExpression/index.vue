@@ -99,26 +99,25 @@ const onButtonClick = (symbol) => {
   }
 
   if (symbol === "📷") {
-      return;
-    }
-
- if(symbol === "CE" ){
-   return clearElement();
+    return;
   }
 
-  const prevSymbol = result.value[result.value.length-1];
+  if (symbol === "CE") {
+    return clearElement();
+  }
+
+  const prevSymbol = result.value[result.value.length - 1];
   if (operationSymbols.includes(prevSymbol) && operationSymbols.includes(symbol)) {
     if (symbol === "=") {
       return;
-    }else return result.value = result.value.replace(prevSymbol, symbol);
-   
-   } 
+    } else return (result.value = result.value.replace(prevSymbol, symbol));
+  }
 
-  if (symbol === "x<sup>y</sup>") { 
+  if (symbol === "x<sup>y</sup>") {
     if (operationSymbols.includes(prevSymbol)) {
-      result.value = result.value.replace(prevSymbol, "^"); 
+      result.value = result.value.replace(prevSymbol, "^");
       return;
-    }else return result.value += "^";
+    } else return (result.value += "^");
   }
 
   if (symbol === "=") {
@@ -133,14 +132,12 @@ const onButtonClick = (symbol) => {
     return (result.value = symbol);
   }
 
-
   const f = resultContainsTrigonometricSymbol();
-  if (f!= -1) {
+  if (f != -1) {
     if (operationSymbols.includes(prevSymbol) && operationSymbols.include(symbol)) {
-      return result.value = result.value.replace(f, "");
-    }else return result.value = result.value.replace(f, symbol);
+      return (result.value = result.value.replace(f, ""));
+    } else return (result.value = result.value.replace(f, symbol));
   }
-  
 
   const expressionParts = result.value.split(" ");
   const lastExpressionPart = expressionParts[expressionParts.length - 1];
@@ -150,36 +147,33 @@ const onButtonClick = (symbol) => {
   } else {
     result.value += " " + symbol;
   }
-
-  
 };
 
-function clearElement(){
-   if (result.value.length>1) {
-      let characters = -1;
+function clearElement() {
+  if (result.value.length > 1) {
+    let characters = -1;
 
-      if (result.value[result.value.length-1] === 'n') {
-         characters = -3;
-      }else if (result.value[result.value.length-1] === 's') {
-        characters = -3;
-      }else if (result.value[result.value.length-3] === 'o') {
-        characters = -4;
-      }else if (result.value[result.value.length-1] === 'g') {
-        characters = -2;
-      }
+    if (result.value[result.value.length - 1] === "n") {
+      characters = -3;
+    } else if (result.value[result.value.length - 1] === "s") {
+      characters = -3;
+    } else if (result.value[result.value.length - 3] === "o") {
+      characters = -4;
+    } else if (result.value[result.value.length - 1] === "g") {
+      characters = -2;
+    }
 
-      if (result.value.length + characters <= 0) {
-        return result.value = "0";
-      } else return result.value = result.value.slice(0, characters); 
-
-    }else return result.value = "0";
+    if (result.value.length + characters <= 0) {
+      return (result.value = "0");
+    } else return (result.value = result.value.slice(0, characters));
+  } else return (result.value = "0");
 }
 
-function resultContainsTrigonometricSymbol(){
+function resultContainsTrigonometricSymbol() {
   let trSymbol = -1;
-   trigonometricSymbols.forEach(element => {
-    if (result.value.substring(result.value.length-4).includes(element)) {
-      trSymbol = element; 
+  trigonometricSymbols.forEach((element) => {
+    if (result.value.substring(result.value.length - 4).includes(element)) {
+      trSymbol = element;
     }
   });
 
@@ -249,42 +243,6 @@ function replaceTgAndCotg() {
 
     matchIndex = result.value.search(cotgRegex);
   }
-}
-
-function onCameraButtonClick(e) {
-  const data = new FormData();
-  data.append("locale", "en");
-  data.append("image", e.target.files[0], "Untitled.jpg");
-
-  const options = {
-    method: "POST",
-    headers: {
-      "X-RapidAPI-Key": "c400b29832msh6666338ddbcfb72p1bf952jsn8aaf15ca7975",
-      "X-RapidAPI-Host": "photomath1.p.rapidapi.com",
-    },
-    body: data,
-  };
-
-  fetch("https://photomath1.p.rapidapi.com/maths/solve-problem", options)
-    .then((res) => res.json())
-    .then((res) => {
-
-      let solution = res.result.groups[0].entries[0].preview.content.solution;
-
-      while (true) {
-        if (solution.children) {
-          solution = solution.children[solution.children.length - 1];
-        } else {
-          break;
-        }
-      }
-
-      result.value = solution.value;
-
-    })
-    .catch((err) => {
-      result.value = "Error";
-    });
 }
 </script>
 <template>
@@ -470,13 +428,20 @@ function onCameraButtonClick(e) {
         v-for="data in [
           { symbol: '0', bgColor: 'secondary' },
           { symbol: '.', bgColor: 'secondary' },
-          { symbol: '&#128247;', bgColor: 'secondary' },
-          { symbol: '=', bgColor: 'primary' },
         ]"
         :backgroundColor="data.bgColor"
         :symbol="data.symbol"
         :onButtonClick="onButtonClick"
       />
+      <CustomButton
+        v-if="isProcessingImage"
+        :component="Spinner"
+        componentClass="image-loading-spinner"
+        backgroundColor="secondary"
+        :onButtonClick="onButtonClick"
+      />
+      <ImageUploadButton v-else id="image-upload" :onChange="onCameraButtonClick" />
+      <CustomButton symbol="=" backgroundColor="primary" :onButtonClick="onButtonClick" />
     </div>
   </div>
 </template>

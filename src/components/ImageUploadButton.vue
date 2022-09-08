@@ -1,5 +1,5 @@
 <script setup>
-const { id, onChange, classCSS } = defineProps(["id", "onChange, classCSS"]);
+const { id, onChange, classCSS } = defineProps(["id", "onChange", "classCSS"]);
 </script>
 <template>
   <input
