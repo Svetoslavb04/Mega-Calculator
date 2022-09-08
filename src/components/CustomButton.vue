@@ -5,7 +5,13 @@ const {
   onButtonClick,
   component,
   componentClass,
-} = defineProps(["backgroundColor", "symbol", "onButtonClick", "component", "componentClass"]);
+} = defineProps([
+  "backgroundColor",
+  "symbol",
+  "onButtonClick",
+  "component",
+  "componentClass",
+]);
 </script>
 <template>
   <div
@@ -14,7 +20,7 @@ const {
     @click="onButtonClick(symbol)"
   >
     <component v-if="component" :is="component" :classCSS="componentClass"></component>
-    <h1 v-if="symbol" v-html="symbol" class="custom-button-symbol"></h1>
+    <h2 v-if="symbol" v-html="symbol" class="custom-button-symbol"></h2>
   </div>
 </template>
 <style scoped>
@@ -44,5 +50,12 @@ const {
 }
 .bg-color-secondary:hover {
   background-color: var(--secondary-hover);
+}
+
+@media (max-width: 500px) {
+  #calculator-default .custom-button {
+    width: 55px;
+    height: 60px;
+  }
 }
 </style>

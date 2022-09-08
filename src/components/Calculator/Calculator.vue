@@ -58,7 +58,6 @@ watch(
   padding: 20px;
   border-radius: 5px;
   width: var(--calculator-width);
-  height: 550px;
   background-color: #252f45;
   user-select: none;
 }
@@ -97,5 +96,52 @@ watch(
 #input-box:focus-visible {
   outline: none;
   border: 2px solid var(--primary) !important;
+}
+
+.image-loading-spinner {
+  width: 63px;
+  height: 63px;
+}
+
+.image-loading-spinner div {
+  border-width: 6px;
+  width: 48px;
+  height: 48px;
+}
+
+@media (max-width: 500px) {
+  .image-loading-spinner {
+    width: 55px;
+    height: 55px;
+  }
+
+  .image-loading-spinner div {
+    border-width: 4px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 500px) {
+  :root {
+    --calculator-width: 320px;
+  }
+}
+
+@media (max-width: 650px) {
+  #calculator.expression-mode {
+    --calculator-width: 320px;
+  }
+
+  .expression-mode .image-loading-spinner {
+    width: 55px;
+    height: 55px;
+  }
+
+  .expression-mode .image-loading-spinner div {
+    border-width: 4px;
+    width: 40px;
+    height: 40px;
+  }
 }
 </style>
