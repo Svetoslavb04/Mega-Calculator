@@ -125,16 +125,17 @@ const onButtonClick = (symbol) => {
   if (result.value === "0" && !operationSymbols.includes(symbol)) {
     return (result.value = symbol);
   }
-  const f = resultContainsTrigonometricSymbol();
-  if (f!= -1) {
-    clearElement();
-    if (operationSymbols.includes(result.value[result.value.length-1]) && operationSymbols.include(symbol)) {
-      return;
-    }else return result.value += symbol;
-    // if (operationSymbols.includes(prevSymbol) && operationSymbols.include(symbol)) {
-    //   return result.value = result.value.replace(f, "");
-    // }else return result.value = result.value.replace(f, symbol);
-  }
+    const f = resultContainsTrigonometricSymbol();
+    if (f!= -1 && trigonometricSymbols.includes(symbol)) {
+      // let s = symbol;
+      // clearElement();
+      // if (operationSymbols.includes(result.value[result.value.length-1]) && operationSymbols.include(symbol)) {
+      //   return;
+      // }else if(result.value ==="0")  return result.value = s;
+      // else return result.value += s;
+
+      return result.value = result.value.replace(f, symbol);
+    }
   
   const expressionParts = result.value.split(" ");
   const lastExpressionPart = expressionParts[expressionParts.length - 1];
@@ -173,7 +174,6 @@ function resultContainsTrigonometricSymbol() {
       trSymbol = element;
     }
   });
-
   return trSymbol;
 }
 
