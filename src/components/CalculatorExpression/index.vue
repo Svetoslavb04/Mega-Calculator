@@ -12,6 +12,8 @@ import CustomButton from "../../components/CustomButton.vue";
 
 const { result } = defineProps(["result"]);
 
+const trigonometricSymbols = ["sin", "cos", "tg", "cotg"];
+
 const math = create(all, {
   number: "BigNumber",
   precision: 11
@@ -22,28 +24,45 @@ const onButtonClick = (symbol) => {
     return (result.value = "0");
   }
 
+  if (symbol === "📷") {
+      return;
+    }
+
  if(symbol === "CE" ){
    if (result.value.length>1) {
+      let characters = -1;
 
       if (result.value[result.value.length-1] === 'n') {
-         return result.value = result.value.slice(0,-3); 
+         characters = -3;
       }else if (result.value[result.value.length-1] === 's') {
-        return result.value = result.value.slice(0,-3);
+        characters = -3;
       }else if (result.value[result.value.length-3] === 'o') {
-        return result.value = result.value.slice(0,-4);
+        characters = -4;
       }else if (result.value[result.value.length-1] === 'g') {
-        return result.value = result.value.slice(0,-2);
+        characters = -2;
       }
 
-      return result.value = result.value.slice(0,-1); 
+      if (result.value.length + characters <= 0) {
+        return result.value = "0";
+      } else return result.value = result.value.slice(0, characters); 
 
     }else return result.value = "0";
   }
 
-  if (symbol === "x<sup>y</sup>") { 
-    return result.value += "^";
-  }
+  const prevSymbol = result.value[result.value.length-1];
+  if (operationSymbols.includes(prevSymbol) && operationSymbols.includes(symbol)) {
+    if (symbol === "=") {
+      return;
+    }else return result.value = result.value.replace(prevSymbol, symbol);
+   
+   } 
 
+  if (symbol === "x<sup>y</sup>") { 
+    if (operationSymbols.includes(prevSymbol)) {
+      result.value = result.value.replace(prevSymbol, "^"); 
+      return;
+    }else return result.value += "^";
+  }
 
   if (symbol === "=") {
     replacePercentageExpression();
@@ -57,6 +76,14 @@ const onButtonClick = (symbol) => {
     return (result.value = symbol);
   }
 
+  
+
+  const f = resultContainsTrigonometricSymbol();
+  if (f!= -1) {
+  return result.value = result.value.replace(f, symbol);
+  }
+  
+
   const expressionParts = result.value.split(" ");
   const lastExpressionPart = expressionParts[expressionParts.length - 1];
 
@@ -65,7 +92,20 @@ const onButtonClick = (symbol) => {
   } else {
     result.value += " " + symbol;
   }
+
+  
 };
+
+function resultContainsTrigonometricSymbol(){
+  let trSymbol = -1;
+   trigonometricSymbols.forEach(element => {
+    if (result.value.substring(result.value.length-4).includes(element)) {
+      trSymbol = element; 
+    }
+  });
+
+  return trSymbol;
+}
 
 function replacePercentageExpression() {
   const percentageRegex = /[0-9]+ % [0-9]+/g;
@@ -132,6 +172,42 @@ function replaceTgAndCotg() {
 
     matchIndex = result.value.search(cotgRegex);
   }
+}
+
+function onCameraButtonClick(e) {
+  const data = new FormData();
+  data.append("locale", "en");
+  data.append("image", e.target.files[0], "Untitled.jpg");
+
+  const options = {
+    method: "POST",
+    headers: {
+      "X-RapidAPI-Key": "c400b29832msh6666338ddbcfb72p1bf952jsn8aaf15ca7975",
+      "X-RapidAPI-Host": "photomath1.p.rapidapi.com",
+    },
+    body: data,
+  };
+
+  fetch("https://photomath1.p.rapidapi.com/maths/solve-problem", options)
+    .then((res) => res.json())
+    .then((res) => {
+
+      let solution = res.result.groups[0].entries[0].preview.content.solution;
+
+      while (true) {
+        if (solution.children) {
+          solution = solution.children[solution.children.length - 1];
+        } else {
+          break;
+        }
+      }
+
+      result.value = solution.value;
+
+    })
+    .catch((err) => {
+      result.value = "Error";
+    });
 }
 </script>
 <template>
