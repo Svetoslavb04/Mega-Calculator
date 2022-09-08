@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { create, all } from "mathjs";
+import Compressor from "compressorjs";
 
 import {
   calculatorModes,
@@ -121,41 +122,63 @@ function handleOperation(operation) {
 }
 
 function onCameraButtonClick(e) {
-  const data = new FormData();
-  data.append("locale", "en");
-  data.append("image", e.target.files[0]);
+  const file = e.target.files[0];
 
-  const options = {
-    method: "POST",
-    headers: {
-      "X-RapidAPI-Key": "c400b29832msh6666338ddbcfb72p1bf952jsn8aaf15ca7975",
-      "X-RapidAPI-Host": "photomath1.p.rapidapi.com",
-    },
-    body: data,
-  };
+  if (!file) {
+    return;
+  }
 
-  isProcessingImage.value = true;
-
-  fetch("https://photomath1.p.rapidapi.com/maths/solve-problem", options)
-    .then((res) => res.json())
-    .then((res) => {
+  new Compressor(file, {
+    quality: 0.2,
+    convertSize: 100,
+    maxWidth: 500,
+    success(resultBlob) {
       
-      let solution = res.result.groups[0].entries[0].preview.content.solution;
+      const newFile = new File([resultBlob], "image.jpg", {
+        type: result.type
+      });
 
-      while (true) {
-        if (solution.children) {
-          solution = solution.children[solution.children.length - 1];
-        } else {
-          break;
-        }
-      }
+      const data = new FormData();
+      data.append("locale", "en");
+      data.append("image", newFile);
 
-      result.value = solution.value;
-      isProcessingImage.value = false;
-    })
-    .catch((err) => {
-      result.value = "Error";
-    });
+      const options = {
+        method: "POST",
+        headers: {
+          "X-RapidAPI-Key": "c400b29832msh6666338ddbcfb72p1bf952jsn8aaf15ca7975",
+          "X-RapidAPI-Host": "photomath1.p.rapidapi.com",
+        },
+        body: data,
+      };
+
+      isProcessingImage.value = true;
+
+      fetch("https://photomath1.p.rapidapi.com/maths/solve-problem", options)
+        .then((res) => res.json())
+        .then((res) => {
+
+          if (res.message) {
+            throw res.message;
+          }
+
+          let solution = res.result.groups[0].entries[0].preview.content.solution;
+
+          while (true) {
+            if (solution.children) {
+              solution = solution.children[solution.children.length - 1];
+            } else {
+              break;
+            }
+          }
+          
+          result.value = solution.value;
+          isProcessingImage.value = false;
+        })
+        .catch((err) => {
+          result.value = "Error";
+        });
+    },
+  });
 }
 </script>
 <template>
@@ -230,11 +253,7 @@ function onCameraButtonClick(e) {
           backgroundColor="secondary"
           :onButtonClick="onButtonClick"
         />
-        <ImageUploadButton
-          v-else
-          id="image-upload"
-          :onChange="onCameraButtonClick"
-        />
+        <ImageUploadButton v-else id="image-upload" :onChange="onCameraButtonClick" />
       </div>
       <CustomButton symbol="=" backgroundColor="primary" :onButtonClick="onButtonClick" />
     </div>
